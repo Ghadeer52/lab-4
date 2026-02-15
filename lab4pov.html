@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LAB4 - تجربة تعلم استثنائية</title>
+    <style>
+        :root {
+            --primary: #8B2BE2;
+            --primary-dark: #6a1bbd;
+            --secondary: #FF1493;
+            --bg-dark: #0A1E42;
+            --text-main: #0A1E42;
+            --text-muted: #64748B;
+            --white: #ffffff;
+            --success: #10B981;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0A1E42 0%, #1A2F5F 50%, #2A1B4E 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            color: var(--white);
+        }
+
+        /* Container & Glassmorphism */
+        .container {
+            background: rgba(255, 255, 255, 0.98);
+            border-radius: 30px;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.4);
+            max-width: 480px;
+            width: 100%;
+            overflow: hidden;
+            color: var(--text-main);
+            animation: containerSlideUp 0.6s ease-out;
+        }
+
+        @keyframes containerSlideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Header Area */
+        .header {
+            background: linear-gradient(135deg, var(--primary) 0%, #9D4EDD 100%);
+            padding: 35px 20px;
+            text-align: center;
+            color: var(--white);
+        }
+
+        .logo {
+            font-size: 42px;
+            font-weight: 900;
+            letter-spacing: -1px;
+            margin-bottom: 8px;
+        }
+
+        .logo span { color: var(--secondary); }
+
+        .tagline {
+            font-size: 14px;
+            opacity: 0.9;
+            font-weight: 500;
+        }
+
+        /* Content & Progress */
+        .content { padding: 30px; }
+
+        .progress-bar {
+            height: 4px;
+            background: #E2E8F0;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--primary);
+            width: 25%;
+            border-radius: 10px;
+            transition: width 0.4s ease;
+        }
+
+        /* Steps Logic */
+        .step { display: none; animation: fadeIn 0.4s ease-in-out; }
+        .step.active { display: block; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: scale(0.98); } to { opacity: 1; transform: scale(1); } }
+
+        h1 { font-size: 24px; margin-bottom: 10px; text-align: center; }
+        .subtitle { font-size: 15px; color: var(--text-muted); text-align: center; margin-bottom: 25px; }
+
+        /* Options Style */
+        .options { display: grid; gap: 12px; }
+        .option {
+            background: #F8FAFC;
+            border: 2px solid #E2E8F0;
+            border-radius: 16px;
+            padding: 18px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .option:hover { border-color: var(--primary); background: #F5F3FF; }
+        .option.selected { border-color: var(--primary); background: var(--primary); color: white; }
+        .option.selected .option-desc { color: rgba(255,255,255,0.8); }
+
+        .option-title { font-weight: bold; font-size: 16px; margin-bottom: 4px; }
+        .option-desc { font-size: 12px; color: var(--text-muted); }
+
+        /* Scarcity Banner (Sadaya Style) */
+        .scarcity-banner {
+            background: #FFFBEB;
+            border: 1px dashed #F59E0B;
+            padding: 12px;
+            border-radius: 12px;
+            color: #92400E;
+            font-size: 13px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        /* Form Controls */
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 6px; font-weight: 600; font-size: 14px; }
+        input {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid #E2E8F0;
+            border-radius: 12px;
+            font-size: 16px;
+            outline: none;
+        }
+        input:focus { border-color: var(--primary); }
+
+        .btn {
+            width: 100%;
+            padding: 16px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 17px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: 0.3s;
+        }
+        .btn:hover { background: var(--primary-dark); transform: translateY(-2px); }
+        .btn:disabled { background: #CBD5E1; cursor: not-allowed; }
+
+        /* Success screen */
+        .success-screen { text-align: center; }
+        .success-icon { font-size: 60px; margin-bottom: 15px; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header">
+            <div class="logo">lab<span>4</span></div>
+            <div class="tagline">حول محتواك إلى تجربة تعلم استثنائية</div>
+        </div>
+
+        <div class="content">
+            <div class="progress-bar"><div class="progress-fill" id="p-fill"></div></div>
+
+            <!-- Step 1: نوع المحتوى -->
+            <div class="step active" id="step1">
+                <h1> ما نوع المحتوى الذي تريد صناعته؟</h1>
+                <p class="subtitle">ساعدنا نفهم احتياجاتك لنقدم لك الحل الأمثل</p>
+                
+                <div class="options">
+                    <div class="option" onclick="selectOption(1, 'educational')">
+                        <span class="option-icon"></span>
+                        <div class="option-title">محتوى تعليمي تفاعلي</div>
+                        <div class="option-desc">دروس ومقررات تعليمية بأسلوب تفاعلي وممتع</div>
+                    </div>
+                    <div class="option" onclick="selectOption(1, 'training')">
+                        <span class="option-icon"></span>
+                        <div class="option-title">محتوى تدريبي مهني</div>
+                        <div class="option-desc">برامج تدريبية للموظفين والمؤسسات</div>
+                    </div>
+                    <div class="option" onclick="selectOption(1, 'awareness')">
+                        <span class="option-icon"></span>
+                        <div class="option-title">محتوى توعوي وإرشادي</div>
+                        <div class="option-desc">حملات توعية وإرشاد للجمهور المستهدف</div>
+                    </div>
+                    <div class="option" onclick="selectOption(1, 'cultural')">
+                        <span class="option-icon"></span>
+                        <div class="option-title">محتوى ثقافي ووطني</div>
+                        <div class="option-desc">محتوى يعزز الهوية والتراث الثقافي</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 2: حجم المؤسسة -->
+            <div class="step" id="step2">
+                <h1> ما حجم مؤسستك أو فريقك؟</h1>
+                <p class="subtitle">نريد تخصيص الحل المناسب لحجم احتياجاتك</p>
+                
+                <div class="options">
+                    <div class="option" onclick="selectOption(2, 'individual')">
+                        <span class="option-icon">👤</span>
+                        <div class="option-title">فرد (معلم، مدرب، صانع محتوى)</div>
+                        <div class="option-desc">أعمل بشكل مستقل على إنتاج المحتوى</div>
+                    </div>
+                    <div class="option" onclick="selectOption(2, 'small')">
+                        <span class="option-icon">👥</span>
+                        <div class="option-title">مؤسسة صغيرة (10-50 موظف)</div>
+                        <div class="option-desc">فريق صغير أو مؤسسة ناشئة</div>
+                    </div>
+                    <div class="option" onclick="selectOption(2, 'medium')">
+                        <span class="option-icon">🏫</span>
+                        <div class="option-title">مؤسسة متوسطة (50-500 موظف)</div>
+                        <div class="option-desc">مدرسة، معهد، أو شركة متوسطة</div>
+                    </div>
+                    <div class="option" onclick="selectOption(2, 'large')">
+                        <span class="option-icon">🏛️</span>
+                        <div class="option-title">مؤسسة كبيرة (+500 موظف)</div>
+                        <div class="option-desc">جامعة، جهة حكومية، أو شركة كبرى</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="step" id="step3">
+                <h1> ما أكبر تحدي تواجهه؟</h1>
+                <p class="subtitle">فهم تحدياتك يساعدنا في تقديم الحل الأنسب</p>
+                
+                <div class="options">
+                    <div class="option" onclick="selectOption(3, 'engagement')">
+                        <span class="option-icon"></span>
+                        <div class="option-title">صعوبة جذب انتباه المتعلمين</div>
+                        <div class="option-desc">المحتوى التقليدي لا يحقق التفاعل المطلوب</div>
+                    </div>
+                    <div class="option" onclick="selectOption(3, 'measurement')">
+                        <span class="option-icon"></span>
+                        <div class="option-title">غياب قياس الأثر والنتائج</div>
+                        <div class="option-desc">لا توجد أدوات لقياس فعالية المحتوى</div>
+                    </div>
+                    <div class="option" onclick="selectOption(3, 'cost')">
+                        <span class="option-icon"></span>
+                        <div class="option-title">تكلفة الإنتاج العالية</div>
+                        <div class="option-desc">صناعة المحتوى التفاعلي مكلفة ومعقدة</div>
+                    </div>
+                    <div class="option" onclick="selectOption(3, 'tools')">
+                        <span class="option-icon"></span>
+                        <div class="option-title">نقص الأدوات التفاعلية</div>
+                        <div class="option-desc">عدم توفر منصة متكاملة للتلعيب والتفاعل</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="step" id="step4">
+                <div class="scarcity-banner">
+                    عدد محدود من الأماكن المتاحة للتسجيل المبكر
+                </div>
+                <h1>كن من الأوائل</h1>
+                <p class="subtitle">سجل اهتمامك الآن وسنتواصل معك عند الإطلاق</p>
+                <form onsubmit="handleSubmit(event)">
+                    <div class="form-group">
+                        <label>الاسم</label>
+                        <input type="text" id="userName" placeholder="الاسم الكريم" required>
+                    </div>
+                    <div class="form-group">
+                        <label>البريد الإلكتروني</label>
+                        <input type="email" id="userEmail" placeholder="example@email.com" required>
+                    </div>
+                    <button type="submit" class="btn" id="subBtn">احجز مكاني الآن </button>
+                </form>
+            </div>
+
+            <div class="step success-screen" id="success">
+                <div class="success-icon">🎊</div>
+                <h1 style="color: var(--success)">تم تسجيلك بنجاح!</h1>
+                <p class="subtitle">شكراً لثقتك بـ LAB4. ستصلك دعوة حصرية قريباً عبر بريدك الإلكتروني.</p>
+                <button class="btn" onclick="location.reload()">العودة للرئيسية</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'https://script.google.com/macros/s/AKfycbzkvi_4RgzHeDJ7rYa9H6Uk4dHslMclKHF_0c5z8VXFRGVHQ3f_qonPjb8k1pc80cE3/exec';
+        
+        let currentStep = 1;
+        let finalData = { step1: '', step2: '', step3: '', name: '', email: '' };
+
+        function handleSelect(step, value) {
+            finalData[`step${step}`] = value;
+            
+            // تأثير بصري للاختيار
+            const options = document.querySelectorAll(`#step${step} .option`);
+            options.forEach(opt => opt.classList.remove('selected'));
+            event.currentTarget.classList.add('selected');
+
+            setTimeout(() => {
+                document.getElementById(`step${step}`).classList.remove('active');
+                currentStep++;
+                document.getElementById(`step${currentStep}`).classList.add('active');
+                document.getElementById('p-fill').style.width = (currentStep * 25) + '%';
+            }, 300);
+        }
+
+        async function handleSubmit(e) {
+            e.preventDefault();
+            const btn = document.getElementById('subBtn');
+            btn.disabled = true;
+            btn.innerText = 'جاري الحفظ...';
+
+            finalData.name = document.getElementById('userName').value;
+            finalData.email = document.getElementById('userEmail').value;
+
+            try {
+                // إرسال البيانات (تم حل مشكلة الـ CORS عبر استخدام no-cors)
+                await fetch(API_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(finalData)
+                });
+
+                // الانتقال لصفحة النجاح
+                document.getElementById('step4').classList.remove('active');
+                document.getElementById('success').classList.add('active');
+                document.getElementById('p-fill').style.width = '100%';
+                
+                // حفظ نسخة احتياطية في جهاز المستخدم
+                localStorage.setItem('lab4_lead', JSON.stringify(finalData));
+                
+            } catch (err) {
+                console.error(err);
+                alert('عذراً، حدث خطأ. يرجى المحاولة مرة أخرى.');
+                btn.disabled = false;
+                btn.innerText = 'احجز مكاني الآن 🚀';
+            }
+        }
+    </script>
+</body>
+</html>
